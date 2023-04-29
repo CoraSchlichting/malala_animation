@@ -43,13 +43,14 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	op.GeoM.Translate(charX, float64(charY))
 	screen.DrawImage(character, op)
 
-	backgroundWidth, backgroundHeight := background.Size()
-	backgroundScaleY := float64(screenHeight) / float64(backgroundHeight)
+	// backgroundWidth, backgroundHeight := background.Bounds().Size()
+	imgPoint := background.Bounds().Size()
+	backgroundScaleY := float64(screenHeight) / float64(imgPoint.Y)
 
-	for i := -1; i < int(math.Ceil(float64(screenWidth)/float64(backgroundWidth))); i++ {
+	for i := -1; i < int(math.Ceil(float64(screenWidth)/float64(imgPoint.X))); i++ {
 		op = &ebiten.DrawImageOptions{}
 		op.GeoM.Scale(1, backgroundScaleY)
-		op.GeoM.Translate(float64(i*backgroundWidth)+charX, 0)
+		op.GeoM.Translate(float64(i*imgPoint.X)-charX, 0)
 		screen.DrawImage(background, op)
 	}
 }
