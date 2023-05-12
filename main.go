@@ -19,8 +19,8 @@ var (
 	character  *ebiten.Image
 
 	charX  = 0.0
-	charY  = screenHeight / 2
-	speedX = 3
+	charY  = screenHeight - 150
+	speedX = 1.25
 )
 
 type Game struct {
@@ -32,6 +32,7 @@ func (g *Game) Update() error {
 
 	charX += float64(speedX)
 
+	// Reset the charX position once image is done passing
 	if charX >= float64(background.Bounds().Dx()) {
 		charX = 0
 	}
@@ -100,7 +101,7 @@ func drawTextBox(screen *ebiten.Image, text string) {
 func drawMalala(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Scale(0.05, 0.05)
-	op.GeoM.Translate(100, float64(charY))
+	op.GeoM.Translate(10, float64(charY))
 	screen.DrawImage(character, op)
 }
 
