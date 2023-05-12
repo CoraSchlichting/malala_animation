@@ -3,7 +3,6 @@ package main
 import (
 	"image/color"
 	"log"
-	"math"
 	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -33,14 +32,8 @@ func (g *Game) Update() error {
 
 	charX += float64(speedX)
 
-	if charX >= screenWidth {
+	if charX >= float64(background.Bounds().Dx()) {
 		charX = 0
-	}
-
-	if ebiten.IsKeyPressed(ebiten.KeySpace) {
-		showTextBox = true
-	} else {
-		showTextBox = false
 	}
 
 	return nil
@@ -50,20 +43,17 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	bgImgPoint := background.Bounds().Size()
 	backgroundScaleY := float64(screenHeight) / float64(bgImgPoint.Y)
+	backgroundScaleX := .5
 	var xMovement float64
-	for i := -1; i < int(math.Ceil(float64(screenWidth)/float64(bgImgPoint.X))); i++ {
-		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Scale(1, backgroundScaleY)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(backgroundScaleX, backgroundScaleY)
 
-		xMovement = float64(i*bgImgPoint.X) - charX
-		op.GeoM.Translate(xMovement, 0)
-		screen.DrawImage(background, op)
-
-	}
+	xMovement = -charX
+	op.GeoM.Translate(xMovement, 0)
+	screen.DrawImage(background, op)
 
 	drawMalala(screen)
 	printStory(screen, int(xMovement))
-
 }
 
 func printStory(screen *ebiten.Image, screenLocation int) {
