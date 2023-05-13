@@ -59,11 +59,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 func printStory(screen *ebiten.Image, screenLocation int) {
 	if screenLocation < -100 && screenLocation > -500 {
-		drawTextBox(screen, "Malala was the youngest Nobel peace price winner!! What would happen if this was a really long string with lots and lots of text, I guess we'd just have to see, how far can we go!? CAN WE GO FARTHER?!? I THINK WE CAN!!!!!! OOOOOOOOOOHHHHWWWWEEEEEEEE RICK, I THINK, OH GEE RICK I THINK WE'RE GOING TO BREAK THIS STRING!!!!!! *BURPRPRPRP* You- you know what your problem is, Morty? You don't know a char pointer when you see one *burp* that's right, there are no strings, Morty! It's arrays! arrays of arrays morty! *burp* They're everywhere! And you can get unsafe morty, you can start doing pointer arithmatic if that's your thing, but you gotta be careful morty, you gotta be careful! You can't just go around dereferencing pointers all willy nilly, you gotta be careful morty!")
+		drawTextBox(screen, screenWidth, screenHeight, "Malala was the youngest Nobel peace price winner!! What would happen if this was a really long string with lots and lots of text, I guess we'd just have to see, how far can we go!? CAN WE GO FARTHER?!? I THINK WE CAN!!!!!! OOOOOOOOOOHHHHWWWWEEEEEEEE RICK, I THINK, OH GEE RICK I THINK WE'RE GOING TO BREAK THIS STRING!!!!!! *BURPRPRPRP* You- you know what your problem is, Morty? You don't know a char pointer when you see one *burp* that's right, there are no strings, Morty! It's arrays! arrays of arrays morty! *burp* They're everywhere! And you can get unsafe morty, you can start doing pointer arithmatic if that's your thing, but you gotta be careful morty, you gotta be careful! You can't just go around dereferencing pointers all willy nilly, you gotta be careful morty!")
 	}
 }
 
-func drawTextBox(screen *ebiten.Image, text string) {
+func drawTextBox(screen *ebiten.Image, screenWidth, screenHeight int, text string) {
 	// Draw a semi-transparent black rectangle over the entire screen
 	rect := ebiten.NewImage(screenWidth, screenHeight)
 	screen.DrawImage(rect, nil)
@@ -71,12 +71,12 @@ func drawTextBox(screen *ebiten.Image, text string) {
 	// Draw a border around the text box
 	borderWidth := 2.0
 	borderColor := color.NRGBA{0, 0, 0, 0}
-	rect = ebiten.NewImage(int(screenWidth-(borderWidth*2)), 50)
+	rect = ebiten.NewImage(int(float64(screenWidth)-(borderWidth*2)), 50)
 	rect.Fill(borderColor)
 	rect.Fill(color.NRGBA{0, 0, 0, 128})
 
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(borderWidth, float64(screenHeight-50-borderWidth))
+	op.GeoM.Translate(borderWidth, float64(screenHeight-50-int(borderWidth)))
 
 	defaultFontPixelWidth := 12
 	maxCharsPerLine := (screenWidth / defaultFontPixelWidth) * 2
