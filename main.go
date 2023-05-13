@@ -3,9 +3,12 @@ package main
 import (
 	"image/color"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
@@ -54,7 +57,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.DrawImage(background, op)
 
 	drawMalala(screen)
-	printStory(screen, int(xMovement))
 }
 
 func printStory(screen *ebiten.Image, screenLocation int) {
@@ -124,7 +126,32 @@ func main() {
 
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("Malala's Story")
+	playVoiceOver()
 	if err := ebiten.RunGame(&Game{}); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func playVoiceOver() {
+	const sampleRate = 44100
+	voiceOverMp3, err := os.Open("Voiceover.mp3")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	audioContext := audio.NewContext(sampleRate)
+
+	decoded, err := mp3.DecodeWithSampleRate(sampleRate, voiceOverMp3)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Create an audio player
+	player, err := (*audioContext).NewPlayer(decoded)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Start playing the audio
+	player.Play()
+
 }
